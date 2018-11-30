@@ -50,7 +50,7 @@
     <div id="index" class="cover full-window">
       <div class="col-sm-12 larger">
         <p class='text-center'>
-          <strong class="indexTitle domi">DoNote</strong>
+          <strong class="indexTitle domi">DoCalender</strong>
         </p>
         <div class="control">
           <p class='text-center'>
@@ -58,12 +58,12 @@
               require('./lib/sidUnified.php');
               session_start();
               if (!empty($_COOKIE['sidAutorizeRikka'])) {
-                  $SID = new SID('donote');
+                  $SID = new SID('docalender');
                   $SID -> authCheck();
               }
               if (!empty($_SESSION['pid'])) {
                   echo "<div id='white'>".$_SESSION['nickname']."님, 돌아오셨군요!</div>";
-                  echo "<script type=\"text/javascript\">setTimeout(\"location.href = './note.php'\", 5000);</script>";
+                  echo "<script type=\"text/javascript\">setTimeout(\"location.href = './calender.php'\", 5000);</script>";
                   echo "<div style='color:white'>곧 리다이렉트됩니다.</div>";
               } else {
                   echo "<button class='btn btn-light btn-lg' id='loginBtn1'>로그인</button>";
@@ -75,7 +75,7 @@
     </div>
     <div id="login_form" class="covra covraLogin text-center" style="display:none">
       <div class="center">
-        <div id="login">로그인 | DoNote</div>
+        <div id="login">로그인 | DoCalender</div>
         <div id="lotext" class="text-center">
           <br />
           <form class="center form" action="./function/process_log.php" method="post">
@@ -94,7 +94,7 @@
     </div>
     <div id="register" class="covra covraRegister text-center" style="display:none">
       <div align="center">
-        <div id="login">회원가입 | DoNote</div>
+        <div id="login">회원가입 | DoCalender</div>
         <div id="lotext">
           <br />
           <form class="center form" action="./function/process_reg.php" method="post">
