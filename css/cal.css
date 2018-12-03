@@ -18,6 +18,9 @@
   border: 0;
 }
 .doCalenderDate {
+  background-color: rgb(224, 224, 224);
+}
+.doCalenderDay {
   height: 30px;
   text-align: center;
 }

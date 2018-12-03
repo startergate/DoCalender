@@ -72,6 +72,10 @@
         }
       }
       var monthChange = function(e) {
+        if (Number(document.querySelector('.doCalenderYear').value) < 1900) {
+          alert("1900년 이전의 날짜는 사용이 불가합니다.");
+          return;
+        }
         document.title = document.querySelector('.doCalenderYear').value + "년 " + (Number(document.querySelector('.doCalenderMonth').value) + 1) + "월의 DoCalender";
         console.log("working");
         doCalenderSet();
@@ -82,7 +86,6 @@
         console.log(d);
         var row = 1;
         for (var i = 1; i < day; i++) {
-
           document.getElementById('w1-'+i).innerHTML = "";
           document.getElementById('w1-'+i).style.backgroundColor = "rgb(224, 224, 224)";
         }
@@ -152,67 +155,67 @@
             </select>
           </caption>
           <tr class="doCalenderUI">
-            <td class="doCalenderUI doCalenderDate">일</td>
-            <td class="doCalenderUI doCalenderDate">월</td>
-            <td class="doCalenderUI doCalenderDate">화</td>
-            <td class="doCalenderUI doCalenderDate">수</td>
-            <td class="doCalenderUI doCalenderDate">목</td>
-            <td class="doCalenderUI doCalenderDate">금</td>
-            <td class="doCalenderUI doCalenderDate">토</td>
+            <td class="doCalenderUI doCalenderDay">일</td>
+            <td class="doCalenderUI doCalenderDay">월</td>
+            <td class="doCalenderUI doCalenderDay">화</td>
+            <td class="doCalenderUI doCalenderDay">수</td>
+            <td class="doCalenderUI doCalenderDay">목</td>
+            <td class="doCalenderUI doCalenderDay">금</td>
+            <td class="doCalenderUI doCalenderDay">토</td>
           </tr>
           <tr class="doCalenderUI" id="w1">
-            <td class="doCalenderUI" id="w1-1">d</td>
-            <td class="doCalenderUI" id="w1-2">d</td>
-            <td class="doCalenderUI" id="w1-3">d</td>
-            <td class="doCalenderUI" id="w1-4">d</td>
-            <td class="doCalenderUI" id="w1-5">d</td>
-            <td class="doCalenderUI" id="w1-6">d</td>
-            <td class="doCalenderUI" id="w1-7">d</td>
+            <td class="doCalenderUI doCalenderDate" id="w1-1"></td>
+            <td class="doCalenderUI doCalenderDate" id="w1-2"></td>
+            <td class="doCalenderUI doCalenderDate" id="w1-3"></td>
+            <td class="doCalenderUI doCalenderDate" id="w1-4"></td>
+            <td class="doCalenderUI doCalenderDate" id="w1-5"></td>
+            <td class="doCalenderUI doCalenderDate" id="w1-6"></td>
+            <td class="doCalenderUI doCalenderDate" id="w1-7"></td>
           </tr>
           <tr class="doCalenderUI" id="w2">
-            <td class="doCalenderUI" id="w2-1">d</td>
-            <td class="doCalenderUI" id="w2-2">d</td>
-            <td class="doCalenderUI" id="w2-3">d</td>
-            <td class="doCalenderUI" id="w2-4">d</td>
-            <td class="doCalenderUI" id="w2-5">d</td>
-            <td class="doCalenderUI" id="w2-6">d</td>
-            <td class="doCalenderUI" id="w2-7">d</td>
+            <td class="doCalenderUI doCalenderDate" id="w2-1"></td>
+            <td class="doCalenderUI doCalenderDate" id="w2-2"></td>
+            <td class="doCalenderUI doCalenderDate" id="w2-3"></td>
+            <td class="doCalenderUI doCalenderDate" id="w2-4"></td>
+            <td class="doCalenderUI doCalenderDate" id="w2-5"></td>
+            <td class="doCalenderUI doCalenderDate" id="w2-6"></td>
+            <td class="doCalenderUI doCalenderDate" id="w2-7"></td>
           </tr>
           <tr class="doCalenderUI" id="w3">
-            <td class="doCalenderUI" id="w3-1">d</td>
-            <td class="doCalenderUI" id="w3-2">d</td>
-            <td class="doCalenderUI" id="w3-3">d</td>
-            <td class="doCalenderUI" id="w3-4">d</td>
-            <td class="doCalenderUI" id="w3-5">d</td>
-            <td class="doCalenderUI" id="w3-6">d</td>
-            <td class="doCalenderUI" id="w3-7">d</td>
+            <td class="doCalenderUI doCalenderDate" id="w3-1"></td>
+            <td class="doCalenderUI doCalenderDate" id="w3-2"></td>
+            <td class="doCalenderUI doCalenderDate" id="w3-3"></td>
+            <td class="doCalenderUI doCalenderDate" id="w3-4"></td>
+            <td class="doCalenderUI doCalenderDate" id="w3-5"></td>
+            <td class="doCalenderUI doCalenderDate" id="w3-6"></td>
+            <td class="doCalenderUI doCalenderDate" id="w3-7"></td>
           </tr>
           <tr class="doCalenderUI" id="w4">
-            <td class="doCalenderUI" id="w4-1">d</td>
-            <td class="doCalenderUI" id="w4-2">d</td>
-            <td class="doCalenderUI" id="w4-3">d</td>
-            <td class="doCalenderUI" id="w4-4">d</td>
-            <td class="doCalenderUI" id="w4-5">d</td>
-            <td class="doCalenderUI" id="w4-6">d</td>
-            <td class="doCalenderUI" id="w4-7">d</td>
+            <td class="doCalenderUI doCalenderDate" id="w4-1"></td>
+            <td class="doCalenderUI doCalenderDate" id="w4-2"></td>
+            <td class="doCalenderUI doCalenderDate" id="w4-3"></td>
+            <td class="doCalenderUI doCalenderDate" id="w4-4"></td>
+            <td class="doCalenderUI doCalenderDate" id="w4-5"></td>
+            <td class="doCalenderUI doCalenderDate" id="w4-6"></td>
+            <td class="doCalenderUI doCalenderDate" id="w4-7"></td>
           </tr>
           <tr class="doCalenderUI" id="w5">
-            <td class="doCalenderUI" id="w5-1">d</td>
-            <td class="doCalenderUI" id="w5-2">d</td>
-            <td class="doCalenderUI" id="w5-3">d</td>
-            <td class="doCalenderUI" id="w5-4">d</td>
-            <td class="doCalenderUI" id="w5-5">d</td>
-            <td class="doCalenderUI" id="w5-6">d</td>
-            <td class="doCalenderUI" id="w5-7">d</td>
+            <td class="doCalenderUI doCalenderDate" id="w5-1"></td>
+            <td class="doCalenderUI doCalenderDate" id="w5-2"></td>
+            <td class="doCalenderUI doCalenderDate" id="w5-3"></td>
+            <td class="doCalenderUI doCalenderDate" id="w5-4"></td>
+            <td class="doCalenderUI doCalenderDate" id="w5-5"></td>
+            <td class="doCalenderUI doCalenderDate" id="w5-6"></td>
+            <td class="doCalenderUI doCalenderDate" id="w5-7"></td>
           </tr>
           <tr class="doCalenderUI" id="w6">
-            <td class="doCalenderUI" id="w6-1">d</td>
-            <td class="doCalenderUI" id="w6-2">d</td>
-            <td class="doCalenderUI" id="w6-3">d</td>
-            <td class="doCalenderUI" id="w6-4">d</td>
-            <td class="doCalenderUI" id="w6-5">d</td>
-            <td class="doCalenderUI" id="w6-6">d</td>
-            <td class="doCalenderUI" id="w6-7">d</td>
+            <td class="doCalenderUI doCalenderDate" id="w6-1"></td>
+            <td class="doCalenderUI doCalenderDate" id="w6-2"></td>
+            <td class="doCalenderUI doCalenderDate" id="w6-3"></td>
+            <td class="doCalenderUI doCalenderDate" id="w6-4"></td>
+            <td class="doCalenderUI doCalenderDate" id="w6-5"></td>
+            <td class="doCalenderUI doCalenderDate" id="w6-6"></td>
+            <td class="doCalenderUI doCalenderDate" id="w6-7"></td>
           </tr>
         </table>
         <!-- <div class="g-recaptcha" data-callback="saveEnable" data-expired-callback="saveDisable" data-sitekey="6LdYE2UUAAAAAH75nPeL2j1kYBpjaECBXs-TwYTA"></div> -->
