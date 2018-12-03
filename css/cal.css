@@ -1,9 +1,28 @@
+.doCalDiv {
+  height: 93vh
+}
 .doCalenderUI {
-  border: 1px solid black;
+  border: 1px solid rgb(224, 224, 224);
+  padding: 3px;
+  vertical-align: top;
+}
+.doCalenderYear {
+  border: 0;
+  text-align: right;
+  width: 40px;
+}
+.doCalenderYear:focus {
+  border-bottom: 1px solid black;
+}
+.doCalenderMonth {
+  border: 0;
+}
+.doCalenderDate {
+  height: 30px;
   text-align: center;
 }
 .doCalenderTop {
   width: 80vw;
-  height: 90%
+  height: 90%;
+  margin: 10px auto;
 }
-.
