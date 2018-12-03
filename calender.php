@@ -114,10 +114,17 @@
         }
       }
       var doCalenderTodoPopup = function(year, month, day) {
-        var output = "<p class='doCalenderPopupHead'>"+month+"월 "+day+"일의 할 일"+"<span class='doCalenderPopupHead glyphicon glyphicon-remove' aria-hidden='true' onclick='doCalenderTodoPopupDestroy()' style='position: absolute; right: 33px; top: 23px'></span>"
+        var output = "<div style='width: 100%'><p class='doCalenderPopupHead'>"+month+"월 "+day+"일의 할 일"+"<span class='doCalenderPopupHead glyphicon glyphicon-remove' aria-hidden='true' onclick='doCalenderTodoPopupDestroy()' style='position: absolute; right: 33px; top: 23px'></span></div><span id='count' style='display:none'>0</span><form class='popupForm' action='' method='post'><div class='popupFormData'></div><li class='doCalenderPopupList'><span class='glyphicon glyphicon-plus' aria-hidden='true' onclick='doCalenderPopupAddLine()'></span>  할 일 추가</li></form><button class='doCalenderPopupBtn' id='doCalenderPopupSaveBtn'><span class='glyphicon glyphicon-ok'></span> | 저장</button>";
         document.getElementsByClassName("doCalenderTODOEditPopup")[0].innerHTML = output;
         document.getElementsByClassName("doCalenderTODOEditPopup")[0].style.display = "block";
         document.getElementsByClassName("fullLayer")[0].style.display = "block";
+      }
+      var doCalenderPopupAddLine = function() {
+        if (Number(document.getElementById('count').innerHTML) >= 14) {
+          return;
+        }
+        document.getElementById('count').innerHTML = Number(document.getElementById('count').innerHTML) + 1;
+        document.getElementsByClassName('popupFormData')[0].innerHTML += "<li class='doCalenderPopupList'><input type='checkbox' class='doCalenderPopupCheckbox' style='margin-right: 10px'><input type='text' name='' class='doCalenderPopupInput' value='' placeholder='할 일을 입력하세요.'></li>"
       }
       var doCalenderTodoPopupDestroy = function() {
         document.getElementsByClassName("doCalenderTODOEditPopup")[0].innerHTML = '';

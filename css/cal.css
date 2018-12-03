@@ -52,6 +52,23 @@ button {
 .doCalenderPopupHead {
   font-size: 30px;
 }
+.doCalenderPopupList {
+  list-style-type: none;
+  border-top: 1px solid black;
+  padding: 10px;
+}
+.doCalenderPopupList:last-child {
+  border-bottom: 1px solid black;
+}
+.doCalenderPopupBtn {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+}
+.doCalenderPopupInput {
+  border: 0;
+  width: 95%;
+}
 .fullLayer {
   position: fixed;
   left:0px;
