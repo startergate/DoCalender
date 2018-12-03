@@ -34,6 +34,7 @@
       }
       .imgLocation{
         position: fixed;
+        margin:auto;
         font-size: 10px;
         background-color:rgba(255,255,255,0.5);
         width:100px;

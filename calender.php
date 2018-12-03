@@ -83,6 +83,8 @@
         console.log(d);
         var row = 1;
         for (var i = 1; i < day; i++) {
+          document.getElementById('w1-'+day).setAttribute('day', 0);
+          document.getElementById('w1-'+i).onclick = "";
           document.getElementById('w1-'+i).innerHTML = "";
           document.getElementById('w1-'+i).style.backgroundColor = "rgb(224, 224, 224)";
         }
@@ -91,6 +93,10 @@
             day = 1;
             row++;
           }
+          document.getElementById('w'+row+'-'+day).onclick = function() {
+            doCalenderTodoPopup(d.getFullYear(), d.getMonth()+1, this.getAttribute('day'));
+          }
+          document.getElementById('w'+row+'-'+day).setAttribute('day', i+1);
           document.getElementById('w'+row+'-'+day).innerHTML = (i+1)+'<hr class="doCalenderHR">';
           document.getElementById('w'+row+'-'+day).style.backgroundColor = "white";
           day++;
@@ -100,10 +106,23 @@
             day = 1;
             row++;
           }
+          document.getElementById('w'+row+'-'+day).setAttribute('day', 0);
+          document.getElementById('w'+row+'-'+day).onclick = "";
           document.getElementById('w'+row+'-'+day).innerHTML = "";
           document.getElementById('w'+row+'-'+day).style.backgroundColor = "rgb(224, 224, 224)";
-          day++
+          day++;
         }
+      }
+      var doCalenderTodoPopup = function(year, month, day) {
+        var output = "<p class='doCalenderPopupHead'>"+month+"월 "+day+"일의 할 일"+"<span class='doCalenderPopupHead glyphicon glyphicon-remove' aria-hidden='true' onclick='doCalenderTodoPopupDestroy()' style='position: absolute; right: 33px; top: 23px'></span>"
+        document.getElementsByClassName("doCalenderTODOEditPopup")[0].innerHTML = output;
+        document.getElementsByClassName("doCalenderTODOEditPopup")[0].style.display = "block";
+        document.getElementsByClassName("fullLayer")[0].style.display = "block";
+      }
+      var doCalenderTodoPopupDestroy = function() {
+        document.getElementsByClassName("doCalenderTODOEditPopup")[0].innerHTML = '';
+        document.getElementsByClassName("doCalenderTODOEditPopup")[0].style.display = "none";
+        document.getElementsByClassName("fullLayer")[0].style.display = "none";
       }
     </script>
     <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -133,6 +152,8 @@
     <div class="container-fluid layer2" id="padding-generate-top">
       <hr class="displayOptionMobile" />
       <div class="col-md-12 doCalDiv">
+        <div class="doCalenderTODOEditPopup" style="display:none"></div>
+        <div class="fullLayer" onclick='doCalenderTodoPopupDestroy()' style="display:none"></div>
         <table class="doCalenderUI doCalenderTop">
           <caption>
             <input type="text" class="doCalenderYear" name="" value="" maxlength="4" size="2">년
@@ -150,9 +171,7 @@
               <option value="10" selected="none">11월</option>
               <option value="11" selected="none">12월</option>
             </select>
-            <button onclick="init()">
-              오늘로
-            </button>
+            <button onclick="init()">오늘로</button>
           </caption>
           <tr class="doCalenderUI">
             <td class="doCalenderUI doCalenderDay">일</td>

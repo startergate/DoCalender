@@ -37,3 +37,27 @@ button {
 .doCalenderHR {
   margin: 3px 0px;
 }
+.doCalenderTODOEditPopup {
+  left: 25%;
+  top: 10%;
+  height: 80%;
+  width: 50%;
+  background-color: white;
+  border: 1px solid #3d414d;
+  padding: 20px 30px;
+  border-radius: 8px;
+  position: fixed;
+  z-index: 333;
+}
+.doCalenderPopupHead {
+  font-size: 30px;
+}
+.fullLayer {
+  position: fixed;
+  left:0px;
+  top:0px;
+  z-index: 20;
+  background-color: rgba(0,0,0,0.3);
+  height: 100vh;
+  width: 100vw;
+}
