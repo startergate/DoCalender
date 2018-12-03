@@ -1,3 +1,8 @@
+button {
+  background-color: #3d414d;
+  border-color: #3d414d;
+  color:white;
+}
 .doCalDiv {
   height: 93vh
 }

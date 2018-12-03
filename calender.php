@@ -4,16 +4,6 @@
   require("./config/config.php");
   $SID = new SID("docalender");
   $SID -> loginCheck("./");
-  // Select Note Database
-  if (empty($_GET['id']) && !empty($_COOKIE['docalYuuta'])) {
-      $id = $_COOKIE['docalYuuta'];
-  } elseif (empty($_GET['id'])) {
-      $id = 'startergatedonotedefaultregister';
-  } else {
-      $id = $_GET['id'];
-  }
-  setcookie("docalYuuta", $id, time() + 86400 * 30, '/note');
-  $conn = new mysqli($config["host"], $config["duser"], $config["dpw"], $config["dname"]);  //Note Database
 
   // Select Profile Image
   $profileImg = $SID -> profileGet($_SESSION['pid'], ".");
@@ -52,7 +42,14 @@
   	<link rel="stylesheet" type="text/css" href="./css/Normalize.css">
     <title>DoCalender</title>
     <script type="text/javascript">
-
+      var init = function() {
+        var t = new Date();
+        document.querySelector('.doCalenderYear').value = t.getFullYear();
+        document.getElementsByClassName("doCalenderMonth")[0].options[t.getMonth()].selected = true;
+        document.querySelector('.doCalenderYear').addEventListener("change", monthChange);
+        document.getElementsByClassName("doCalenderMonth")[0].addEventListener("change", monthChange);
+        monthChange();
+      }
       var getMaxDate = function(month) {
         switch (month) {
           case 1:
@@ -153,6 +150,9 @@
               <option value="10" selected="none">11월</option>
               <option value="11" selected="none">12월</option>
             </select>
+            <button onclick="init()">
+              오늘로
+            </button>
           </caption>
           <tr class="doCalenderUI">
             <td class="doCalenderUI doCalenderDay">일</td>
@@ -218,16 +218,10 @@
             <td class="doCalenderUI doCalenderDate" id="w6-7"></td>
           </tr>
         </table>
-        <!-- <div class="g-recaptcha" data-callback="saveEnable" data-expired-callback="saveDisable" data-sitekey="6LdYE2UUAAAAAH75nPeL2j1kYBpjaECBXs-TwYTA"></div> -->
       </div>
     </div>
     <script type="text/javascript">
-      window.onload = monthChange;
-      var t = new Date();
-      document.querySelector('.doCalenderYear').value = t.getFullYear();
-      document.getElementsByClassName("doCalenderMonth")[0].options[t.getMonth()].selected = true;
-      document.querySelector('.doCalenderYear').addEventListener("change", monthChange);
-      document.getElementsByClassName("doCalenderMonth")[0].addEventListener("change", monthChange);
+      window.onload = init;
     </script>
     <script src="./lib/jquery-3.3.1.min.js"></script>
     <script src="./bootstrap/js/bootstrap.min.js"></script>
