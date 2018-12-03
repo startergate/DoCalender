@@ -52,8 +52,58 @@
   	<link rel="stylesheet" type="text/css" href="./css/Normalize.css">
     <title>DoCalender</title>
     <script type="text/javascript">
+
+      var getMaxDate = function(month) {
+        switch (month) {
+          case 1:
+          case 3:
+          case 5:
+          case 7:
+          case 8:
+          case 10:
+          case 12:
+            return 31;
+            break;
+          case 2:
+            return 28;
+            break;
+          default:
+            return 30;
+        }
+      }
       var monthChange = function(e) {
-          document.title = document.querySelector('.doCalenderYear').value + "년 " + (Number(document.querySelector('.doCalenderMonth').value) + 1) + "월의 DoCalender";
+        document.title = document.querySelector('.doCalenderYear').value + "년 " + (Number(document.querySelector('.doCalenderMonth').value) + 1) + "월의 DoCalender";
+        console.log("working");
+        doCalenderSet();
+      }
+      var doCalenderSet = function() {
+        var d = new Date(Number(document.querySelector('.doCalenderYear').value), Number(document.getElementsByClassName("doCalenderMonth")[0].value), 1);
+        var day = d.getDay()+1;
+        console.log(d);
+        var row = 1;
+        for (var i = 1; i < day; i++) {
+
+          document.getElementById('w1-'+i).innerHTML = "";
+          document.getElementById('w1-'+i).style.backgroundColor = "rgb(224, 224, 224)";
+        }
+        for (var i = 0; i < getMaxDate(d.getMonth()+1); i++) {
+          if (day > 7) {
+            day = 1;
+            row++;
+          }
+          document.getElementById('w'+row+'-'+day).innerHTML = (i+1)+'<hr class="doCalenderHR">';
+          document.getElementById('w'+row+'-'+day).style.backgroundColor = "white";
+          day++;
+        }
+        for (var i = (row-1)*7+day; i <= 42; i++) {
+          if (day > 7) {
+            day = 1;
+            row++;
+          }
+          document.getElementById('w'+row+'-'+day).innerHTML = "";
+          document.getElementById('w'+row+'-'+day).style.backgroundColor = "rgb(224, 224, 224)";
+          day++
+        }
       }
     </script>
     <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -175,8 +225,6 @@
       document.getElementsByClassName("doCalenderMonth")[0].options[t.getMonth()].selected = true;
       document.querySelector('.doCalenderYear').addEventListener("change", monthChange);
       document.getElementsByClassName("doCalenderMonth")[0].addEventListener("change", monthChange);
-
-      document.getElementById('w1-'+new Date(Number(document.querySelector('.doCalenderYear').value), Number(document.getElementsByClassName("doCalenderMonth")[0].value)+1, 1).getDay());
     </script>
     <script src="./lib/jquery-3.3.1.min.js"></script>
     <script src="./bootstrap/js/bootstrap.min.js"></script>
