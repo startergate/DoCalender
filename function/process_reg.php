@@ -18,9 +18,9 @@
                       echo "<script>window.alert('이미 있는 아이디입니다.');</script>";
                       break;
                     default:
-                      $udb = 'calenderedb_'.$pid;
+                      $udb = 'userdb_'.$pid;
 
-                      $sql = "CREATE TABLE $udb (date VARCHAR(10),note VARCHAR(10),PRIMARY KEY (date))";
+                      $sql = "CREATE TABLE $udb (date VARCHAR(10),note VARCHAR(32),PRIMARY KEY (date))";
                       $conn -> query($sql);
 
                       echo "<script>window.alert('회원가입이 완료되었습니다. 로그인 해주세요.');</script>";
