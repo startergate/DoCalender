@@ -1,7 +1,7 @@
 <?php
   require("../config/config.php");
   header('Content-Type: application/json');
-  $output = 0;
+  $output = json_encode(array('error'=>1));
   $conn = new mysqli($config["host"], $config["duser"], $config["dpw"], $config["dname"]);  //Note Database
   $sql = "SELECT note FROM userdb_".$_POST['pid']." WHERE date LIKE '".$_POST['date']."'";
   $result = $conn -> query($sql);
