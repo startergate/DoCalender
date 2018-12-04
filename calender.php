@@ -174,7 +174,7 @@
           return;
         }
         document.getElementById('count').innerHTML = Number(document.getElementById('count').innerHTML) + 1;
-        document.getElementsByClassName('popupFormData')[0].innerHTML += "<li class='doCalenderPopupList'><input type='checkbox' class='doCalenderPopupCheckbox' style='margin-right: 10px'><input type='text' name='' class='doCalenderPopupInput' value='' placeholder='할 일을 입력하세요.' onchange='doCalenderPopupInputTempSaver("+(Number(document.getElementById('count').innerHTML) - 1)+")'></li>"
+        document.getElementsByClassName('popupFormData')[0].innerHTML += "<li class='doCalenderPopupList'><input type='checkbox' class='doCalenderPopupCheckbox' style='margin-right: 10px' onchange='doCalenderPopupCheckboxTempSaver("+(Number(document.getElementById('count').innerHTML) - 1)+")'><input type='text' name='' class='doCalenderPopupInput' value='' placeholder='할 일을 입력하세요.' onchange='doCalenderPopupInputTempSaver("+(Number(document.getElementById('count').innerHTML) - 1)+")'></li>"
         for (var i = 0; i < document.getElementsByClassName("doCalenderPopupInput").length; i++) {
           if (document.getElementsByClassName("doCalenderPopupInput")[i].getAttribute("string") == undefined) {
             continue;
@@ -223,6 +223,14 @@
       }
       var doCalenderPopupInputTempSaver = function(number) {
         document.getElementsByClassName("doCalenderPopupInput")[number].setAttribute("string", document.getElementsByClassName("doCalenderPopupInput")[number].value);
+      }
+      var doCalenderPopupCheckboxTempSaver = function(number) {
+        if (document.getElementsByClassName("doCalenderPopupCheckbox")[number].getAttribute("checked") == "true") {
+          document.getElementsByClassName("doCalenderPopupCheckbox")[number].removeAttribute("checked");
+        }
+        if (document.getElementsByClassName("doCalenderPopupCheckbox")[number].value === 'on') {
+          document.getElementsByClassName("doCalenderPopupCheckbox")[number].setAttribute("checked", "true");
+        }
       }
     </script>
     <script src='https://www.google.com/recaptcha/api.js'></script>
