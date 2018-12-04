@@ -115,12 +115,13 @@
       var doCalenderTodoPopup = function(year, month, day) {
         var datename = year+"-"+month+"-"+day;
         var notetext = [];
+
         $.ajax({
           url: './dbaccess/getter.php',
           type: 'POST',
           dataType: 'json',
           async: true,
-          data: {pid: '<?=$_SESSION['pid']?>',name: datename},
+          data: {pid: '<?=$_SESSION['pid']?>',date: datename},
           success: function(data) {
             if (!data.error) {
               var noteid;
@@ -133,9 +134,27 @@
                   notetext = data.text.split('\r\n');
                 }
               })
+              .done(function() {
+                console.log("success");
+              })
+              .fail(function() {
+                console.log("error");
+              })
+              .always(function() {
+                console.log("complete");
+              });
             }
           }
         })
+        .done(function() {
+          console.log("success");
+        })
+        .fail(function() {
+          console.log("error");
+        })
+        .always(function() {
+          console.log("complete");
+        });
         var popuplistNumber = notetext.length;
         var popuplist = "";
         for (var i = 0; i < notetext.length; i++) {
