@@ -174,7 +174,13 @@
           return;
         }
         document.getElementById('count').innerHTML = Number(document.getElementById('count').innerHTML) + 1;
-        document.getElementsByClassName('popupFormData')[0].innerHTML += "<li class='doCalenderPopupList'><input type='checkbox' class='doCalenderPopupCheckbox' style='margin-right: 10px'><input type='text' name='' class='doCalenderPopupInput' value='' placeholder='할 일을 입력하세요.'></li>"
+        document.getElementsByClassName('popupFormData')[0].innerHTML += "<li class='doCalenderPopupList'><input type='checkbox' class='doCalenderPopupCheckbox' style='margin-right: 10px'><input type='text' name='' class='doCalenderPopupInput' value='' placeholder='할 일을 입력하세요.' onchange='doCalenderPopupInputTempSaver("+(Number(document.getElementById('count').innerHTML) - 1)+")'></li>"
+        for (var i = 0; i < document.getElementsByClassName("doCalenderPopupInput").length; i++) {
+          if (document.getElementsByClassName("doCalenderPopupInput")[i].getAttribute("string") == undefined) {
+            continue;
+          }
+          document.getElementsByClassName("doCalenderPopupInput")[i].value = document.getElementsByClassName("doCalenderPopupInput")[i].getAttribute("string");
+        }
       }
       var doCalenderTodoPopupDestroy = function() {
         document.getElementsByClassName("doCalenderTODOEditPopup")[0].innerHTML = '';
@@ -214,6 +220,9 @@
             }
           }
         })
+      }
+      var doCalenderPopupInputTempSaver = function(number) {
+        document.getElementsByClassName("doCalenderPopupInput")[number].setAttribute("string", document.getElementsByClassName("doCalenderPopupInput")[number].value);
       }
     </script>
     <script src='https://www.google.com/recaptcha/api.js'></script>
