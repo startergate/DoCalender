@@ -112,26 +112,38 @@
           day++;
         }
       }
-      var doCalenderTodoPopup = function(year, month, day) {
-        var datename = year+"-"+month+"-"+day;
-        var notetext = [];
-
+      var doCalenderPopupDBAccess = function(datename){
+        var popuplist = "";
         $.ajax({
           url: './dbaccess/getter.php',
           type: 'POST',
           dataType: 'json',
-          async: true,
+          async: false,
           data: {pid: '<?=$_SESSION['pid']?>',date: datename},
           success: function(data) {
+            //data = JSON.parse(data);
             if (!data.error) {
-              var noteid;
+              var noteid = data.note;
+              console.log(noteid);
               $.ajax({
                 url: 'http://donote.co/api/getNote.php',
                 type: 'POST',
                 dataType: 'json',
+                async: false,
                 data: {pid: '<?=$_SESSION['pid']?>', id: noteid},
                 success: function(data) {
-                  notetext = data.text.split('\r\n');
+                  //data = JSON.parse(data);
+                  notetext =  data.text.split('\r\n');
+                  console.log(notetext.length);
+                  var popuplistNumber = notetext.length;
+                  for (var i = 0; i < notetext.length; i++) {
+                    var checked = "";
+                    console.log(notetext[i]);
+                    if (notetext[i].split(' | ')[0] == "완료") {
+                      checked = " checked";
+                    }
+                    popuplist += "<li class='doCalenderPopupList'><input type='checkbox' class='doCalenderPopupCheckbox' style='margin-right: 10px'"+checked+"><input type='text' name='' class='doCalenderPopupInput' value='"+notetext[i].split(' | ')[1]+"' placeholder='할 일을 입력하세요.'></li>"
+                  }
                 }
               })
               .done(function() {
@@ -143,28 +155,31 @@
               .always(function() {
                 console.log("complete");
               });
+            } else {
+              return "";
             }
           }
         })
         .done(function() {
-          console.log("success");
+          console.log("successPopup");
         })
         .fail(function() {
-          console.log("error");
+          console.log("errorPopup");
         })
         .always(function() {
-          console.log("complete");
+          console.log("completePopup");
         });
-        var popuplistNumber = notetext.length;
-        var popuplist = "";
-        for (var i = 0; i < notetext.length; i++) {
-          var checked = "";
-          if (notetext[i].split(' | ')[0] == 완료) {
-            checked = " checked";
-          }
-          popuplist += "<li class='doCalenderPopupList'><input type='checkbox' class='doCalenderPopupCheckbox' style='margin-right: 10px'"+checked+"><input type='text' name='' class='doCalenderPopupInput' value='"+notetext[i].split(' | ')[1]+"' placeholder='할 일을 입력하세요.'></li>"
-        }
-        var output = "<div style='width: 100%'><p class='doCalenderPopupHead'>"+month+"월 "+day+"일의 할 일"+"<span class='doCalenderPopupHead glyphicon glyphicon-remove' aria-hidden='true' onclick='doCalenderTodoPopupDestroy()' style='position: absolute; right: 33px; top: 23px'></span></div><span id='count' style='display:none'>0</span><form class='popupForm' action='' method='post'><div class='popupFormData'></div><li class='doCalenderPopupList'><span class='glyphicon glyphicon-plus' aria-hidden='true' onclick='doCalenderPopupAddLine()'></span>  할 일 추가</li></form><button class='doCalenderPopupBtn' id='doCalenderPopupSaveBtn' onclick='doCalenderPopupSave('"+datename+"')'><span class='glyphicon glyphicon-ok'></span> | 저장</button>";
+        return popuplist;
+      }
+      var doCalenderTodoPopup = function(year, month, day) {
+        var datename = year+"-"+month+"-"+day;
+        var notetext = [];
+
+
+        var output12 = doCalenderPopupDBAccess(datename);
+        console.log(output12);
+        var output = "<div style='width: 100%'><p class='doCalenderPopupHead'>"+month+"월 "+day+"일의 할 일"+"<span class='doCalenderPopupHead glyphicon glyphicon-remove' aria-hidden='true' onclick='doCalenderTodoPopupDestroy()' style='position: absolute; right: 33px; top: 23px'></span></div><span id='count' style='display:none'>0</span><form class='popupForm' action='' method='post'><div class='popupFormData'>"+output12+"</div><li class='doCalenderPopupList'><span class='glyphicon glyphicon-plus' aria-hidden='true' onclick='doCalenderPopupAddLine()'></span>  할 일 추가</li></form><button class='doCalenderPopupBtn' id='doCalenderPopupSaveBtn' onclick='doCalenderPopupSave('"+datename+"')'><span class='glyphicon glyphicon-ok'></span> | 저장</button>";
+        console.log(output);
         document.getElementsByClassName("doCalenderTODOEditPopup")[0].innerHTML = output;
         document.getElementsByClassName("doCalenderTODOEditPopup")[0].style.display = "block";
         document.getElementsByClassName("fullLayer")[0].style.display = "block";
@@ -194,18 +209,19 @@
           url: './dbaccess/getter.php',
           type: 'POST',
           dataType: 'json',
-          async: true,
+          async: false,
           data: {pid: '<?=$_SESSION['pid']?>',name: datename},
           success: function(data) {
+            data = JSON.parse(data);
             if (data.error) {
               var noteid;
               $.ajax({
                 url: 'http://donote.co/api/newNote.php',
                 type: 'POST',
                 dataType: 'json',
-                async: true,
                 data: {title: d.getFullYear()+"년 "+(d.getMonth()+1)+"월 "+d.getDate()+"일의 할 일", text:text},
                 success: function(data) {
+                  data = JSON.parse(data);
                   noteid = data.pid;
                   $.ajax({
                     url: './dbaccess/setter.php',
