@@ -114,6 +114,7 @@
       }
       var doCalenderPopupDBAccess = function(datename){
         var popuplist = "";
+        var count = 0;
         $.ajax({
           url: './dbaccess/getter.php',
           type: 'POST',
@@ -121,7 +122,6 @@
           async: false,
           data: {pid: '<?=$_SESSION['pid']?>',date: datename},
           success: function(data) {
-            //data = JSON.parse(data);
             if (!data.error) {
               var noteid = data.note;
               console.log(noteid);
@@ -132,7 +132,6 @@
                 async: false,
                 data: {pid: '<?=$_SESSION['pid']?>', id: noteid},
                 success: function(data) {
-                  //data = JSON.parse(data);
                   notetext =  data.text.split('\r\n');
                   console.log(notetext.length);
                   var popuplistNumber = notetext.length;
@@ -143,6 +142,7 @@
                       checked = " checked";
                     }
                     popuplist += "<li class='doCalenderPopupList'><input type='checkbox' class='doCalenderPopupCheckbox' style='margin-right: 10px'"+checked+"><input type='text' name='' class='doCalenderPopupInput' value='"+notetext[i].split(' | ')[1]+"' placeholder='할 일을 입력하세요.'></li>"
+                    count++;
                   }
                 }
               })
@@ -169,17 +169,12 @@
         .always(function() {
           console.log("completePopup");
         });
-        return popuplist;
+        return {popuplist:popuplist,count:count};
       }
       var doCalenderTodoPopup = function(year, month, day) {
         var datename = year+"-"+month+"-"+day;
-        var notetext = [];
-
-
-        var output12 = doCalenderPopupDBAccess(datename);
-        console.log(output12);
-        var output = "<div style='width: 100%'><p class='doCalenderPopupHead'>"+month+"월 "+day+"일의 할 일"+"<span class='doCalenderPopupHead glyphicon glyphicon-remove' aria-hidden='true' onclick='doCalenderTodoPopupDestroy()' style='position: absolute; right: 33px; top: 23px'></span></div><span id='count' style='display:none'>0</span><form class='popupForm' action='' method='post'><div class='popupFormData'>"+output12+"</div><li class='doCalenderPopupList'><span class='glyphicon glyphicon-plus' aria-hidden='true' onclick='doCalenderPopupAddLine()'></span>  할 일 추가</li></form><button class='doCalenderPopupBtn' id='doCalenderPopupSaveBtn' onclick='doCalenderPopupSave('"+datename+"')'><span class='glyphicon glyphicon-ok'></span> | 저장</button>";
-        console.log(output);
+        var dblist = doCalenderPopupDBAccess(datename)
+        var output = "<div style='width: 100%'><p class='doCalenderPopupHead'>"+month+"월 "+day+"일의 할 일"+"<span class='doCalenderPopupHead glyphicon glyphicon-remove' aria-hidden='true' onclick='doCalenderTodoPopupDestroy()' style='position: absolute; right: 33px; top: 23px'></span></div><span id='count' style='display:none'>"+dblist.count+"</span><form class='popupForm' action='' method='post'><div class='popupFormData'>"+dblist.popuplist+"</div><li class='doCalenderPopupList'><span class='glyphicon glyphicon-plus' aria-hidden='true' onclick='doCalenderPopupAddLine()'></span>  할 일 추가</li></form><button class='doCalenderPopupBtn' id='doCalenderPopupSaveBtn' onclick='doCalenderPopupSave(\""+datename+"\")'><span class='glyphicon glyphicon-ok'></span> | 저장</button>";
         document.getElementsByClassName("doCalenderTODOEditPopup")[0].innerHTML = output;
         document.getElementsByClassName("doCalenderTODOEditPopup")[0].style.display = "block";
         document.getElementsByClassName("fullLayer")[0].style.display = "block";
@@ -203,54 +198,78 @@
         document.getElementsByClassName("fullLayer")[0].style.display = "none";
       }
       var doCalenderPopupSave = function(datename) {
-        var datename = year+"-"+month+"-"+day;
-        var notetext;
+        var notetext = "";
+        var popupCheckbox = document.getElementsByClassName("doCalenderPopupCheckbox");
+        var popupInput = document.getElementsByClassName("doCalenderPopupInput");
+        if (popupCheckbox.length === 0) {
+          alert("내용을 입력해주세요!");
+          return;
+        }
+        for (var i = 0; i < popupCheckbox.length; i++) {
+          console.log(popupCheckbox[i].value)
+          var checkboxValue = "미완료";
+          if (popupInput[i].value === "") {
+            continue;
+          }
+          if (popupCheckbox[i].value === "on") {
+            checkboxValue = "완료";
+          }
+          notetext += checkboxValue+" | "+popupInput[i].value;
+          if (i !== popupCheckbox.length-1) {
+            notetext += '\r\n';
+          }
+        }
         $.ajax({
           url: './dbaccess/getter.php',
           type: 'POST',
           dataType: 'json',
           async: false,
-          data: {pid: '<?=$_SESSION['pid']?>',name: datename},
+          data: {pid: '<?=$_SESSION['pid']?>',date: datename},
           success: function(data) {
-            data = JSON.parse(data);
-            if (data.error) {
+            console.log(data.note);
+            if (data.note === 0) {
               var noteid;
+              console.log("분기1" + data.note);
               $.ajax({
                 url: 'http://donote.co/api/newNote.php',
                 type: 'POST',
                 dataType: 'json',
-                data: {title: d.getFullYear()+"년 "+(d.getMonth()+1)+"월 "+d.getDate()+"일의 할 일", text:text},
+                data: {pid: '<?=$_SESSION['pid']?>', name: datename.split('-')[0]+"년 "+datename.split('-')[1]+"월 "+datename.split('-')[2]+"일의 할 일", text:notetext},
                 success: function(data) {
-                  data = JSON.parse(data);
+                  console.log("분기1-1" + data.note);
                   noteid = data.pid;
                   $.ajax({
                     url: './dbaccess/setter.php',
                     type: 'POST',
                     dataType: 'json',
                     data: {date: datename, note:data.pid}
-                  })
+                  });
                 }
-              })
+              });
             } else {
-
+              console.log("분기2" + data.note);
+              $.ajax({
+                url: 'http://donote.co/api/editNote.php',
+                type: 'POST',
+                dataType: 'json',
+                data: {pid: '<?=$_SESSION['pid']?>', name: datename.split('-')[0]+"년 "+datename.split('-')[1]+"월 "+datename.split('-')[2]+"일의 할 일", text:notetext, id: data.note},
+              });
             }
+            alert('완료!');
           }
-        })
+        });
       }
       var doCalenderPopupInputTempSaver = function(number) {
         document.getElementsByClassName("doCalenderPopupInput")[number].setAttribute("string", document.getElementsByClassName("doCalenderPopupInput")[number].value);
       }
       var doCalenderPopupCheckboxTempSaver = function(number) {
-        if (document.getElementsByClassName("doCalenderPopupCheckbox")[number].getAttribute("checked") == "true") {
-          document.getElementsByClassName("doCalenderPopupCheckbox")[number].removeAttribute("checked");
-        }
-        if (document.getElementsByClassName("doCalenderPopupCheckbox")[number].value === 'on') {
-          document.getElementsByClassName("doCalenderPopupCheckbox")[number].setAttribute("checked", "true");
+        if (document.getElementsByClassName("doCalenderPopupCheckbox")[number].getAttribute("checked") === null) {
+          document.getElementsByClassName("doCalenderPopupCheckbox")[number].setAttribute("checked", null);
+        } else {
+          document.getElementsByClassName("doCalenderPopupCheckbox")[number].setAttribute("checked", true);
         }
       }
     </script>
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-    <script src='./lib/reCaptchaEnabler.js'></script>
   </head>
   <body>
     <div class="container-fluid padding-erase">
