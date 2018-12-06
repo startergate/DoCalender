@@ -1,6 +1,6 @@
 <?php
   require("../lib/sidUnified.php");
-  $SID = new SID("donote");
+  $SID = new SID("docalender");
   $SID -> loginCheck("../");
   session_start();
   if ($_SESSION['reconfirm'] = 'confirm') {

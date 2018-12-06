@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <?php
   require("./lib/sidUnified.php");
-  require("./config/config.php");
   $SID = new SID("docalender");
   $SID -> loginCheck("./");
 
@@ -74,7 +73,6 @@
           return;
         }
         document.title = document.querySelector('.doCalenderYear').value + "년 " + (Number(document.querySelector('.doCalenderMonth').value) + 1) + "월의 DoCalender";
-        console.log("working");
         doCalenderSet();
       }
       var doCalenderSet = function() {
@@ -96,7 +94,7 @@
             doCalenderTodoPopup(d.getFullYear(), d.getMonth()+1, this.getAttribute('day'));
           }
           document.getElementById('w'+row+'-'+day).setAttribute('day', i+1);
-          document.getElementById('w'+row+'-'+day).innerHTML = (i+1)+'<hr class="doCalenderHR">';
+          document.getElementById('w'+row+'-'+day).innerHTML = (i+1)+'<hr class="doCalenderHR">'+doCalenderDBAccess(d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(i+1));
           document.getElementById('w'+row+'-'+day).style.backgroundColor = "white";
           day++;
         }
@@ -112,6 +110,44 @@
           day++;
         }
       }
+      var doCalenderDBAccess = function(datename){
+        var popuplist = "";
+        $.ajax({
+          url: './dbaccess/getter.php',
+          type: 'POST',
+          dataType: 'json',
+          async: false,
+          data: {pid: '<?=$_SESSION['pid']?>',date: datename},
+          success: function(data) {
+            if (data.note) {
+              var noteid = data.note;
+              $.ajax({
+                url: 'http://donote.co/api/getNote.php',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                data: {pid: '<?=$_SESSION['pid']?>', id: noteid},
+                success: function(data) {
+                  notetext =  data.text.split('\r\n');
+                  for (var i = 0; i < notetext.length; i++) {
+                    if (i == 4) {
+                      break;
+                    }
+                    var save = notetext[i].split(' | ')[1];
+                    if (notetext[i].split(' | ')[0] == "완료") {
+                      save = "<div class='line-through'>"+save+"</div>"
+                    }
+                    popuplist += save;
+                  }
+                }
+              })
+            } else {
+              return "";
+            }
+          }
+        })
+        return popuplist;
+      }
       var doCalenderPopupDBAccess = function(datename){
         var popuplist = "";
         var count = 0;
@@ -124,7 +160,6 @@
           success: function(data) {
             if (!data.error) {
               var noteid = data.note;
-              console.log(noteid);
               $.ajax({
                 url: 'http://donote.co/api/getNote.php',
                 type: 'POST',
@@ -133,11 +168,9 @@
                 data: {pid: '<?=$_SESSION['pid']?>', id: noteid},
                 success: function(data) {
                   notetext =  data.text.split('\r\n');
-                  console.log(notetext.length);
                   var popuplistNumber = notetext.length;
                   for (var i = 0; i < notetext.length; i++) {
                     var checked = " value='off'";
-                    console.log(notetext[i]);
                     if (notetext[i].split(' | ')[0] == "완료") {
                       checked = " checked value='on'";
                     }
@@ -146,29 +179,11 @@
                   }
                 }
               })
-              .done(function() {
-                console.log("success");
-              })
-              .fail(function() {
-                console.log("error");
-              })
-              .always(function() {
-                console.log("complete");
-              });
             } else {
               return "";
             }
           }
         })
-        .done(function() {
-          console.log("successPopup");
-        })
-        .fail(function() {
-          console.log("errorPopup");
-        })
-        .always(function() {
-          console.log("completePopup");
-        });
         return {popuplist:popuplist,count:count};
       }
       var doCalenderTodoPopup = function(year, month, day) {
@@ -206,7 +221,6 @@
           return;
         }
         for (var i = 0; i < popupCheckbox.length; i++) {
-          console.log(popupCheckbox[i].value)
           var checkboxValue = "미완료";
           if (popupInput[i].value === "") {
             continue;
@@ -226,28 +240,23 @@
           async: false,
           data: {pid: '<?=$_SESSION['pid']?>',date: datename},
           success: function(data) {
-            console.log(data.note);
-            if (data.note === 0) {
+            if (!data.note) {
               var noteid;
-              console.log("분기1" + data.note);
               $.ajax({
                 url: 'http://donote.co/api/newNote.php',
                 type: 'POST',
                 dataType: 'json',
                 data: {pid: '<?=$_SESSION['pid']?>', name: datename.split('-')[0]+"년 "+datename.split('-')[1]+"월 "+datename.split('-')[2]+"일의 할 일", text:notetext},
                 success: function(data) {
-                  console.log("분기1-1" + data.note);
-                  noteid = data.pid;
                   $.ajax({
                     url: './dbaccess/setter.php',
                     type: 'POST',
                     dataType: 'json',
-                    data: {date: datename, note:data.pid}
+                    data: {pid: '<?=$_SESSION['pid']?>', date: datename, note:data.pid}
                   });
                 }
               });
             } else {
-              console.log("분기2" + data.note);
               $.ajax({
                 url: 'http://donote.co/api/editNote.php',
                 type: 'POST',
@@ -260,7 +269,6 @@
         });
       }
       var doCalenderPopupInputTempSaver = function(number) {
-        console.log("changed working");
         document.getElementsByClassName("doCalenderPopupInput")[number].setAttribute("string", document.getElementsByClassName("doCalenderPopupInput")[number].value);
         document.getElementsByClassName("doCalenderPopupInput")[number].setAttribute("value", document.getElementsByClassName("doCalenderPopupInput")[number].value);
       }
@@ -320,70 +328,72 @@
             </select>
             <button onclick="init()">오늘로</button>
           </caption>
-          <tr class="doCalenderUI">
-            <td class="doCalenderUI doCalenderDay">일</td>
-            <td class="doCalenderUI doCalenderDay">월</td>
-            <td class="doCalenderUI doCalenderDay">화</td>
-            <td class="doCalenderUI doCalenderDay">수</td>
-            <td class="doCalenderUI doCalenderDay">목</td>
-            <td class="doCalenderUI doCalenderDay">금</td>
-            <td class="doCalenderUI doCalenderDay">토</td>
-          </tr>
-          <tr class="doCalenderUI" id="w1">
-            <td class="doCalenderUI doCalenderDate" id="w1-1"></td>
-            <td class="doCalenderUI doCalenderDate" id="w1-2"></td>
-            <td class="doCalenderUI doCalenderDate" id="w1-3"></td>
-            <td class="doCalenderUI doCalenderDate" id="w1-4"></td>
-            <td class="doCalenderUI doCalenderDate" id="w1-5"></td>
-            <td class="doCalenderUI doCalenderDate" id="w1-6"></td>
-            <td class="doCalenderUI doCalenderDate" id="w1-7"></td>
-          </tr>
-          <tr class="doCalenderUI" id="w2">
-            <td class="doCalenderUI doCalenderDate" id="w2-1"></td>
-            <td class="doCalenderUI doCalenderDate" id="w2-2"></td>
-            <td class="doCalenderUI doCalenderDate" id="w2-3"></td>
-            <td class="doCalenderUI doCalenderDate" id="w2-4"></td>
-            <td class="doCalenderUI doCalenderDate" id="w2-5"></td>
-            <td class="doCalenderUI doCalenderDate" id="w2-6"></td>
-            <td class="doCalenderUI doCalenderDate" id="w2-7"></td>
-          </tr>
-          <tr class="doCalenderUI" id="w3">
-            <td class="doCalenderUI doCalenderDate" id="w3-1"></td>
-            <td class="doCalenderUI doCalenderDate" id="w3-2"></td>
-            <td class="doCalenderUI doCalenderDate" id="w3-3"></td>
-            <td class="doCalenderUI doCalenderDate" id="w3-4"></td>
-            <td class="doCalenderUI doCalenderDate" id="w3-5"></td>
-            <td class="doCalenderUI doCalenderDate" id="w3-6"></td>
-            <td class="doCalenderUI doCalenderDate" id="w3-7"></td>
-          </tr>
-          <tr class="doCalenderUI" id="w4">
-            <td class="doCalenderUI doCalenderDate" id="w4-1"></td>
-            <td class="doCalenderUI doCalenderDate" id="w4-2"></td>
-            <td class="doCalenderUI doCalenderDate" id="w4-3"></td>
-            <td class="doCalenderUI doCalenderDate" id="w4-4"></td>
-            <td class="doCalenderUI doCalenderDate" id="w4-5"></td>
-            <td class="doCalenderUI doCalenderDate" id="w4-6"></td>
-            <td class="doCalenderUI doCalenderDate" id="w4-7"></td>
-          </tr>
-          <tr class="doCalenderUI" id="w5">
-            <td class="doCalenderUI doCalenderDate" id="w5-1"></td>
-            <td class="doCalenderUI doCalenderDate" id="w5-2"></td>
-            <td class="doCalenderUI doCalenderDate" id="w5-3"></td>
-            <td class="doCalenderUI doCalenderDate" id="w5-4"></td>
-            <td class="doCalenderUI doCalenderDate" id="w5-5"></td>
-            <td class="doCalenderUI doCalenderDate" id="w5-6"></td>
-            <td class="doCalenderUI doCalenderDate" id="w5-7"></td>
-          </tr>
-          <tr class="doCalenderUI" id="w6">
-            <td class="doCalenderUI doCalenderDate" id="w6-1"></td>
-            <td class="doCalenderUI doCalenderDate" id="w6-2"></td>
-            <td class="doCalenderUI doCalenderDate" id="w6-3"></td>
-            <td class="doCalenderUI doCalenderDate" id="w6-4"></td>
-            <td class="doCalenderUI doCalenderDate" id="w6-5"></td>
-            <td class="doCalenderUI doCalenderDate" id="w6-6"></td>
-            <td class="doCalenderUI doCalenderDate" id="w6-7"></td>
-          </tr>
-        </table>
+          <tbody>
+            <tr class="doCalenderUI">
+              <td class="doCalenderUI doCalenderDay">일</td>
+              <td class="doCalenderUI doCalenderDay">월</td>
+              <td class="doCalenderUI doCalenderDay">화</td>
+              <td class="doCalenderUI doCalenderDay">수</td>
+              <td class="doCalenderUI doCalenderDay">목</td>
+              <td class="doCalenderUI doCalenderDay">금</td>
+              <td class="doCalenderUI doCalenderDay">토</td>
+            </tr>
+            <tr class="doCalenderUI" id="w1">
+              <td class="doCalenderUI doCalenderDate" id="w1-1"></td>
+              <td class="doCalenderUI doCalenderDate" id="w1-2"></td>
+              <td class="doCalenderUI doCalenderDate" id="w1-3"></td>
+              <td class="doCalenderUI doCalenderDate" id="w1-4"></td>
+              <td class="doCalenderUI doCalenderDate" id="w1-5"></td>
+              <td class="doCalenderUI doCalenderDate" id="w1-6"></td>
+              <td class="doCalenderUI doCalenderDate" id="w1-7"></td>
+            </tr>
+            <tr class="doCalenderUI" id="w2">
+              <td class="doCalenderUI doCalenderDate" id="w2-1"></td>
+              <td class="doCalenderUI doCalenderDate" id="w2-2"></td>
+              <td class="doCalenderUI doCalenderDate" id="w2-3"></td>
+              <td class="doCalenderUI doCalenderDate" id="w2-4"></td>
+              <td class="doCalenderUI doCalenderDate" id="w2-5"></td>
+              <td class="doCalenderUI doCalenderDate" id="w2-6"></td>
+              <td class="doCalenderUI doCalenderDate" id="w2-7"></td>
+            </tr>
+            <tr class="doCalenderUI" id="w3">
+              <td class="doCalenderUI doCalenderDate" id="w3-1"></td>
+              <td class="doCalenderUI doCalenderDate" id="w3-2"></td>
+              <td class="doCalenderUI doCalenderDate" id="w3-3"></td>
+              <td class="doCalenderUI doCalenderDate" id="w3-4">Loading...</td>
+              <td class="doCalenderUI doCalenderDate" id="w3-5"></td>
+              <td class="doCalenderUI doCalenderDate" id="w3-6"></td>
+              <td class="doCalenderUI doCalenderDate" id="w3-7"></td>
+            </tr>
+            <tr class="doCalenderUI" id="w4">
+              <td class="doCalenderUI doCalenderDate" id="w4-1"></td>
+              <td class="doCalenderUI doCalenderDate" id="w4-2"></td>
+              <td class="doCalenderUI doCalenderDate" id="w4-3"></td>
+              <td class="doCalenderUI doCalenderDate" id="w4-4"></td>
+              <td class="doCalenderUI doCalenderDate" id="w4-5"></td>
+              <td class="doCalenderUI doCalenderDate" id="w4-6"></td>
+              <td class="doCalenderUI doCalenderDate" id="w4-7"></td>
+            </tr>
+            <tr class="doCalenderUI" id="w5">
+              <td class="doCalenderUI doCalenderDate" id="w5-1"></td>
+              <td class="doCalenderUI doCalenderDate" id="w5-2"></td>
+              <td class="doCalenderUI doCalenderDate" id="w5-3"></td>
+              <td class="doCalenderUI doCalenderDate" id="w5-4"></td>
+              <td class="doCalenderUI doCalenderDate" id="w5-5"></td>
+              <td class="doCalenderUI doCalenderDate" id="w5-6"></td>
+              <td class="doCalenderUI doCalenderDate" id="w5-7"></td>
+            </tr>
+            <tr class="doCalenderUI" id="w6">
+              <td class="doCalenderUI doCalenderDate" id="w6-1"></td>
+              <td class="doCalenderUI doCalenderDate" id="w6-2"></td>
+              <td class="doCalenderUI doCalenderDate" id="w6-3"></td>
+              <td class="doCalenderUI doCalenderDate" id="w6-4"></td>
+              <td class="doCalenderUI doCalenderDate" id="w6-5"></td>
+              <td class="doCalenderUI doCalenderDate" id="w6-6"></td>
+              <td class="doCalenderUI doCalenderDate" id="w6-7"></td>
+            </tr>
+          </table>
+        </tbody>
       </div>
     </div>
     <script type="text/javascript">

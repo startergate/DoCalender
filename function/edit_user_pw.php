@@ -1,6 +1,6 @@
 <?php
   require("../lib/sidUnified.php");
-  $SID = new SID("donote");
+  $SID = new SID("docalender");
   $SID -> loginCheck("../");
   if ($_POST['confirm_user_edit']) {
       switch ($SID -> passwordEdit($_POST['pw'], $_POST['confirm'], $_SESSION['pid'])) {

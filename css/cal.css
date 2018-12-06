@@ -24,6 +24,13 @@ button {
 }
 .doCalenderDate {
   background-color: rgb(224, 224, 224);
+  width: 14.2%;
+  height: calc(calc(100%-30px)/6);
+  overflow: hidden;
+  table-layout: fixed;
+}
+.doCalenderDate div {
+  height:20px;
 }
 .doCalenderDay {
   height: 30px;
@@ -77,4 +84,7 @@ button {
   background-color: rgba(0,0,0,0.3);
   height: 100vh;
   width: 100vw;
+}
+.line-through {
+  text-decoration: line-through;
 }

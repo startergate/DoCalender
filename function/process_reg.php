@@ -6,7 +6,7 @@
       if (!empty($_POST['id'])) {
           if (!empty($_POST['pw'])) {
               $conn = new mysqli($config["host"], $config["duser"], $config["dpw"], $config["dname"]);
-              $SID = new SID("donote");
+              $SID = new SID("docalender");
               if ($_POST['pw'] === $_POST['pwr']) {
                   $_SESSION['temp'] = $_POST['id'];
                   $pid = $SID -> register($_POST['id'], $_POST['pw'], $_POST['nickname']);
@@ -23,8 +23,9 @@
                       $sql = "CREATE TABLE $udb (date VARCHAR(10),note VARCHAR(32),PRIMARY KEY (date))";
                       $conn -> query($sql);
 
-                      echo "<script>window.alert('회원가입이 완료되었습니다. 로그인 해주세요.');</script>";
-                      break;
+                      echo "<script>window.alert('회원가입이 완료되었습니다. DoNote 로그인 후 로그인 해주세요.');</script>";
+                      echo "<script>window.open('http://donote.com'. '_blank');</script>";
+                      exit;
                   }
               } else {
                   echo "<script>window.alert('비밀번호를 정확히 재입력해주세요.');</script>";
