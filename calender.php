@@ -37,7 +37,6 @@
     <link rel="stylesheet" type="text/css" href="./css/bg_style.css?v=2">
   	<link rel="stylesheet" type="text/css" href="./css/cal.css">
   	<link rel="stylesheet" type="text/css" href="./css/top.css">
-  	<link rel="stylesheet" type="text/css" href="./css/text.css">
   	<link rel="stylesheet" type="text/css" href="./css/Normalize.css">
     <title>DoCalender</title>
     <script type="text/javascript">
@@ -287,7 +286,7 @@
     <div class="container-fluid padding-erase">
       <div class="fixed layer1 bg bgi bgImg">
         <div class="col-md-3">
-          <a href="./note.php"><img src="./static/img/common/donotevec.png" alt="DoNote" class="img-rounded" id=logo alt='메인으로 가기' \></a>
+          <a href="./note.php"><img src="./static/img/common/donotevec.png" alt="DoCalender" class="img-rounded" id=logo alt='메인으로 가기' \></a>
         </div>
         <div class="col-md-9 text-right">
           <div class="btn-group dropdown">

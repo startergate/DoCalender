@@ -1,6 +1,6 @@
 <?php
   require('../lib/sidUnified.php');
-  $SID = new SID("donote");
+  $SID = new SID("docalender");
   $SID -> loginCheck("../");
   if ($_POST['confirm_user'] === '확인') {
       if (!empty($_POST['pw'])) {
