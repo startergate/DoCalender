@@ -136,12 +136,12 @@
                   console.log(notetext.length);
                   var popuplistNumber = notetext.length;
                   for (var i = 0; i < notetext.length; i++) {
-                    var checked = "";
+                    var checked = " value='off'";
                     console.log(notetext[i]);
                     if (notetext[i].split(' | ')[0] == "완료") {
-                      checked = " checked";
+                      checked = " checked value='on'";
                     }
-                    popuplist += "<li class='doCalenderPopupList'><input type='checkbox' class='doCalenderPopupCheckbox' style='margin-right: 10px'"+checked+"><input type='text' name='' class='doCalenderPopupInput' value='"+notetext[i].split(' | ')[1]+"' placeholder='할 일을 입력하세요.'></li>"
+                    popuplist += "<li class='doCalenderPopupList'><input type='checkbox' class='doCalenderPopupCheckbox' style='margin-right: 10px'"+checked+" onchange='doCalenderPopupCheckboxTempSaver("+count+")'><input type='text' name='' class='doCalenderPopupInput' value='"+notetext[i].split(' | ')[1]+"' placeholder='할 일을 입력하세요.' onchange='doCalenderPopupInputTempSaver("+count+")'></li>"
                     count++;
                   }
                 }
@@ -184,7 +184,7 @@
           return;
         }
         document.getElementById('count').innerHTML = Number(document.getElementById('count').innerHTML) + 1;
-        document.getElementsByClassName('popupFormData')[0].innerHTML += "<li class='doCalenderPopupList'><input type='checkbox' class='doCalenderPopupCheckbox' style='margin-right: 10px' onchange='doCalenderPopupCheckboxTempSaver("+(Number(document.getElementById('count').innerHTML) - 1)+")'><input type='text' name='' class='doCalenderPopupInput' value='' placeholder='할 일을 입력하세요.' onchange='doCalenderPopupInputTempSaver("+(Number(document.getElementById('count').innerHTML) - 1)+")'></li>"
+        document.getElementsByClassName('popupFormData')[0].innerHTML += "<li class='doCalenderPopupList'><input type='checkbox' value='off' class='doCalenderPopupCheckbox' style='margin-right: 10px' onchange='doCalenderPopupCheckboxTempSaver("+(Number(document.getElementById('count').innerHTML) - 1)+")'><input type='text' name='' class='doCalenderPopupInput' value='' placeholder='할 일을 입력하세요.' onchange='doCalenderPopupInputTempSaver("+(Number(document.getElementById('count').innerHTML) - 1)+")'></li>"
         for (var i = 0; i < document.getElementsByClassName("doCalenderPopupInput").length; i++) {
           if (document.getElementsByClassName("doCalenderPopupInput")[i].getAttribute("string") == undefined) {
             continue;
@@ -215,7 +215,7 @@
             checkboxValue = "완료";
           }
           notetext += checkboxValue+" | "+popupInput[i].value;
-          if (i !== popupCheckbox.length-1) {
+          if (i !== popupCheckbox.length-1 && popupInput[i+1].value) {
             notetext += '\r\n';
           }
         }
@@ -260,13 +260,17 @@
         });
       }
       var doCalenderPopupInputTempSaver = function(number) {
+        console.log("changed working");
         document.getElementsByClassName("doCalenderPopupInput")[number].setAttribute("string", document.getElementsByClassName("doCalenderPopupInput")[number].value);
+        document.getElementsByClassName("doCalenderPopupInput")[number].setAttribute("value", document.getElementsByClassName("doCalenderPopupInput")[number].value);
       }
       var doCalenderPopupCheckboxTempSaver = function(number) {
         if (document.getElementsByClassName("doCalenderPopupCheckbox")[number].getAttribute("checked") === null) {
-          document.getElementsByClassName("doCalenderPopupCheckbox")[number].setAttribute("checked", null);
-        } else {
           document.getElementsByClassName("doCalenderPopupCheckbox")[number].setAttribute("checked", true);
+          document.getElementsByClassName("doCalenderPopupCheckbox")[number].value = "on";
+        } else {
+          document.getElementsByClassName("doCalenderPopupCheckbox")[number].removeAttribute("checked");
+          document.getElementsByClassName("doCalenderPopupCheckbox")[number].value = "off";
         }
       }
     </script>
