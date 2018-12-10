@@ -265,10 +265,10 @@
                 data: {pid: '<?=$_SESSION['pid']?>', name: datename.split('-')[0]+"년 "+datename.split('-')[1]+"월 "+datename.split('-')[2]+"일의 할 일", text:notetext, id: data.note},
               });
             }
-            alert('완료!');
-            doCalenderSet();
           }
         });
+        alert('완료!');
+        doCalenderSet();
       }
       var doCalenderPopupInputTempSaver = function(number) {
         document.getElementsByClassName("doCalenderPopupInput")[number].setAttribute("string", document.getElementsByClassName("doCalenderPopupInput")[number].value);
