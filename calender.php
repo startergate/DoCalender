@@ -135,6 +135,8 @@
                     var save = notetext[i].split(' | ')[1];
                     if (notetext[i].split(' | ')[0] == "완료") {
                       save = "<div class='line-through'>"+save+"</div>"
+                    } else {
+                      save = "<div>"+save+"</div>"
                     }
                     popuplist += save;
                   }
