@@ -24,7 +24,7 @@
                       $conn -> query($sql);
 
                       echo "<script>window.alert('회원가입이 완료되었습니다. DoNote 로그인 후 로그인 해주세요.');</script>";
-                      echo "<script>window.open('http://donote.com'. '_blank');</script>";
+                      echo "<script>window.location=('http://donote.com');</script>";
                       exit;
                   }
               } else {
