@@ -264,6 +264,7 @@
               });
             }
             alert('완료!');
+            doCalenderSet();
           }
         });
       }
