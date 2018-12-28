@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <?php
-  require("../lib/sidUnified.php");
-  require("../config/config.php");
-  $SID = new SID("docalender");
-  $SID -> loginCheck("../");
-  $conn = new mysqli($config["host"], $config["duser"], $config["dpw"], $config["dname"]);  //Note Database
+  require '../lib/sidUnified.php';
+  require '../config/config.php';
+  $SID = new SID('docalender');
+  $SID->loginCheck('../');
+  $conn = new mysqli($config['host'], $config['duser'], $config['dpw'], $config['dname']);  //Note Database
 
   //Select Profile Image
-  $profileImg = $SID -> profileGet($_SESSION['pid'], "..");
+  $profileImg = $SID->profileGet($_SESSION['pid'], '..');
 ?>
 <html lang="ko">
   <head>

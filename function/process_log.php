@@ -1,15 +1,15 @@
 <?php
-  require('../lib/sidUnified.php');
-  $SID = new SID("docalender");
+  require '../lib/sidUnified.php';
+  $SID = new SID('docalender');
 
   session_start();
 
   if ($_POST['confirm_login']) {
       if (!empty($_POST['id'])) {
           if (!empty($_POST['pw'])) {
-              if ($SID -> login($_POST['id'], $_POST['pw'])) {
-                  if ($_POST['auto'] === "on") {
-                      $SID -> loginCookie($_POST['pw'], $_SESSION['pid'], "/");
+              if ($SID->login($_POST['id'], $_POST['pw'])) {
+                  if ($_POST['auto'] === 'on') {
+                      $SID->loginCookie($_POST['pw'], $_SESSION['pid'], '/');
                   }
                   header('Location: ../calender.php');
               } else {

@@ -56,14 +56,14 @@
         <div class="control">
           <p class='text-center'>
             <?php
-              require('./lib/sidUnified.php');
+              require './lib/sidUnified.php';
               session_start();
               if (!empty($_COOKIE['sidAutorizeRikka'])) {
                   $SID = new SID('docalender');
-                  $SID -> authCheck();
+                  $SID->authCheck();
               }
               if (!empty($_SESSION['pid'])) {
-                  echo "<div id='white'>".$_SESSION['nickname']."님, 돌아오셨군요!</div>";
+                  echo "<div id='white'>".$_SESSION['nickname'].'님, 돌아오셨군요!</div>';
                   echo "<script type=\"text/javascript\">setTimeout(\"location.href = './calender.php'\", 5000);</script>";
                   echo "<div style='color:white'>곧 리다이렉트됩니다.</div>";
               } else {
