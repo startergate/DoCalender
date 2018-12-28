@@ -1,4 +1,5 @@
 # DoCalender
+[![StyleCI](https://github.styleci.io/repos/159660444/shield?branch=master)](https://github.styleci.io/repos/159660444)<br>
 Based on DoNote v0.3.2.3<br />
 Calender Expansion of DoNote. School Web Project<br />
 
